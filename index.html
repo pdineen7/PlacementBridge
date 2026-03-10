@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PlacementBridge</title>
+  <meta
+    name="description"
+    content="PlacementBridge is a secure coordination platform for districts, tutors, out-of-district placements, and service providers."
+  />
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --panel: #ffffff;
+      --panel-2: #0f172a;
+      --text: #0f172a;
+      --muted: #5b6474;
+      --line: #dbe3ef;
+      --accent: #2563eb;
+      --accent-2: #1d4ed8;
+      --soft: #eaf1ff;
+      --success: #dff7e6;
+      --success-text: #166534;
+      --warn: #fff4d6;
+      --warn-text: #92400e;
+      --shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #f8fbff 0%, #eef4fb 100%);
+      color: var(--text);
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+      background: rgba(248, 251, 255, 0.84);
+      border-bottom: 1px solid rgba(219, 227, 239, 0.8);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      background: var(--panel-2);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      color: var(--muted);
+      font-size: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: none;
+      border-radius: 16px;
+      padding: 14px 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 10px 24px rgba(37, 99, 235, 0.22);
+    }
+
+    .btn-primary:hover { background: var(--accent-2); }
+
+    .btn-secondary {
+      background: white;
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    .hero {
+      padding: 64px 0 26px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: white;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    h1 {
+      font-size: clamp(38px, 6vw, 68px);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+      margin: 18px 0 18px;
+      max-width: 760px;
+    }
+
+    .hero p.lead {
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--muted);
+      max-width: 720px;
+      margin: 0;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .stat {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .stat .label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .stat .value {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .stat .sub {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    .panel {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card {
+      padding: 22px;
+      overflow: hidden;
+    }
+
+    .hero-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .hero-card-top h3 {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-card-top p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .mini-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .mini-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 20px;
+      background: #f8fbff;
+      border: 1px solid #e6eef8;
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: var(--panel-2);
+      color: white;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .mini-item .title {
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: -0.01em;
+    }
+
+    .mini-item .meta,
+    .mini-item .body {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+      margin-top: 4px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: #111827;
+      margin-top: 6px;
+    }
+
+    .section {
+      padding: 34px 0;
+    }
+
+    .section-header {
+      max-width: 780px;
+      margin-bottom: 22px;
+    }
+
+    .section-header .kicker {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      margin-bottom: 10px;
+    }
+
+    .section-header h2 {
+      margin: 0 0 12px;
+      font-size: clamp(30px, 4vw, 46px);
+      line-height: 1.04;
+      letter-spacing: -0.03em;
+    }
+
+    .section-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.75;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .feature-card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      background: #eef4ff;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      margin-bottom: 14px;
+    }
+
+    .feature-card h3 {
+      margin: 0 0 10px;
+      font-size: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .feature-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    .comm-shell {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 18px;
+      margin-top: 8px;
+    }
+
+    .thread-list,
+    .thread-detail {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .thread-list h3,
+    .thread-detail h3 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+    }
+
+    .thread-list p.head-sub,
+    .thread-detail p.head-sub {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 16px 0;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      background: white;
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .thread-btn {
+      width: 100%;
+      text-align: left;
+      border: 1px solid var(--line);
+      background: #f8fbff;
+      border-radius: 22px;
+      padding: 14px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .thread-btn:hover,
+    .thread-btn.active {
+      background: var(--panel-2);
+      color: white;
+      border-color: var(--panel-2);
+      transform: translateY(-1px);
+    }
+
+    .thread-btn .top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .thread-btn .t-title {
+      font-weight: 700;
+      font-size: 15px;
+      line-height: 1.4;
+      letter-spacing: -0.01em;
+    }
+
+    .thread-btn .t-meta,
+    .thread-btn .t-body {
+      font-size: 13px;
+      line-height: 1.55;
+      margin-top: 6px;
+      opacity: 0.9;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid transparent;
+    }
+
+    .badge.warn {
+      background: var(--warn);
+      color: var(--warn-text);
+    }
+
+    .badge.success {
+      background: var(--success);
+      color: var(--success-text);
+    }
+
+    .badge.soft {
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    .detail-header {
+      background: #f8fbff;
+      border: 1px solid #e6eef8;
+      border-radius: 22px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    .detail-header .row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .detail-title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0 0 8px;
+    }
+
+    .detail-meta {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .messages {
+      margin-top: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .msg {
+      border-radius: 24px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      background: white;
+    }
+
+    .msg.dark {
+      background: var(--panel-2);
+      color: white;
+      border-color: var(--panel-2);
+    }
+
+    .msg .msg-top {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .msg .name {
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .msg .role {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .msg:not(.dark) .role {
+      background: #f3f6fb;
+    }
+
+    .msg .time {
+      font-size: 12px;
+      opacity: 0.72;
+    }
+
+    .msg p {
+      margin: 0;
+      line-height: 1.75;
+      font-size: 15px;
+    }
+
+    .attachment {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .msg:not(.dark) .attachment {
+      background: #f3f6fb;
+    }
+
+    .pricing {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .price-card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .price-card.featured {
+      background: var(--panel-2);
+      color: white;
+      transform: translateY(-6px);
+    }
+
+    .price-card .tier {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      opacity: 0.72;
+      margin-bottom: 10px;
+    }
+
+    .price-card .amount {
+      font-size: 40px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      margin-bottom: 12px;
+    }
+
+    .price-card p {
+      margin: 0 0 14px;
+      line-height: 1.7;
+      color: inherit;
+      opacity: 0.88;
+    }
+
+    .price-card ul {
+      margin: 0;
+      padding-left: 18px;
+      line-height: 1.9;
+      color: inherit;
+      opacity: 0.9;
+      font-size: 15px;
+    }
+
+    .cta {
+      margin: 34px 0 64px;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: white;
+      border-radius: 34px;
+      padding: 34px;
+      box-shadow: var(--shadow);
+    }
+
+    .cta-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .cta h2 {
+      margin: 0 0 14px;
+      font-size: clamp(30px, 4vw, 46px);
+      line-height: 1.04;
+      letter-spacing: -0.03em;
+    }
+
+    .cta p {
+      margin: 0;
+      color: rgba(255,255,255,0.78);
+      line-height: 1.8;
+      font-size: 17px;
+    }
+
+    .cta-box {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 28px;
+      padding: 22px;
+    }
+
+    .cta-box h3 {
+      margin: 0 0 12px;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+    }
+
+    .cta-box p {
+      font-size: 15px;
+      line-height: 1.75;
+      margin-bottom: 18px;
+    }
+
+    .footer {
+      padding: 0 0 42px;
+      color: var(--muted);
+      font-size: 14px;
+      text-align: center;
+    }
+
+    @media (max-width: 1100px) {
+      .hero-grid,
+      .comm-shell,
+      .cta-grid,
+      .pricing,
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 740px) {
+      .nav-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .hero {
+        padding-top: 40px;
+      }
+
+      .thread-list,
+      .thread-detail,
+      .hero-card,
+      .feature-card,
+      .price-card,
+      .cta {
+        border-radius: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <div class="brand">
+        <div class="logo">PB</div>
+        <div>
+          <div>PlacementBridge</div>
+          <div style="font-size:12px;color:#5b6474;font-weight:600;">Secure coordination for districts and outside providers</div>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#communication">Communication</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#pilot">Pilot</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="eyebrow">MVP product demo</div>
+        <h1>Replace email chaos between districts, placements, tutors, and providers.</h1>
+        <p class="lead">
+          PlacementBridge is a secure coordination platform for school districts, out-of-district placements,
+          tutors, and service providers. Keep student-specific communication, documents, tasks, and access
+          history in one auditable workspace.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#pilot">Request pilot demo</a>
+          <a class="btn btn-secondary" href="#communication">View recent communication</a>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="label">Core promise</div>
+            <div class="value">1 hub</div>
+            <div class="sub">for communication, files, and next steps</div>
+          </div>
+          <div class="stat">
+            <div class="label">Primary buyer</div>
+            <div class="value">District</div>
+            <div class="sub">special education leadership and coordinators</div>
+          </div>
+          <div class="stat">
+            <div class="label">Pilot focus</div>
+            <div class="value">6 weeks</div>
+            <div class="sub">to prove value with a small program rollout</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel hero-card">
+        <div class="hero-card-top">
+          <div>
+            <h3>Why teams switch</h3>
+            <p>Built for cross-organization coordination, not just internal compliance tracking.</p>
+          </div>
+        </div>
+
+        <div class="mini-list">
+          <div class="mini-item">
+            <div class="avatar">CM</div>
+            <div>
+              <div class="title">Student-specific communication</div>
+              <div class="body">Message inside the student workspace instead of chasing scattered email chains.</div>
+            </div>
+            <div class="dot"></div>
+          </div>
+
+          <div class="mini-item">
+            <div class="avatar">DV</div>
+            <div>
+              <div class="title">Controlled document sharing</div>
+              <div class="body">Upload, request, version, and restrict files by user role or partner organization.</div>
+            </div>
+          </div>
+
+          <div class="mini-item">
+            <div class="avatar">TK</div>
+            <div>
+              <div class="title">Task ownership</div>
+              <div class="body">Assign follow-ups to placements, tutors, or providers and track what is overdue.</div>
+            </div>
+          </div>
+
+          <div class="mini-item">
+            <div class="avatar">AT</div>
+            <div>
+              <div class="title">Audit-ready visibility</div>
+              <div class="body">Every view, upload, download, and permission change is logged for district oversight.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-header">
+        <div class="kicker">Exact MVP</div>
+        <h2>Version one does six jobs exceptionally well.</h2>
+        <p>
+          PlacementBridge is intentionally focused. It is not trying to replace an SIS, LMS, or full IEP platform
+          in version one. It solves the operational pain of district-to-provider coordination.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <div class="feature-card">
+          <div class="feature-icon">👥</div>
+          <h3>Student workspaces</h3>
+          <p>Each student has one secure workspace with the relevant district team and approved outside collaborators.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🔐</div>
+          <h3>Role-based access</h3>
+          <p>District admins, case managers, tutors, providers, and placements only see what they are supposed to see.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">💬</div>
+          <h3>Secure messaging</h3>
+          <p>Threaded communication is tied to the student record, searchable, auditable, and much cleaner than email.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📁</div>
+          <h3>Document vault</h3>
+          <p>Upload, preview, request, and version progress reports, service logs, releases, evaluations, and notes.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">✅</div>
+          <h3>Tasks and deadlines</h3>
+          <p>Create accountability for missing reports, expiring consents, follow-ups, and student-specific next steps.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🧾</div>
+          <h3>Audit trail</h3>
+          <p>Every sensitive action is captured so district leaders can see who uploaded, accessed, changed, or responded.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="communication">
+    <div class="container">
+      <div class="section-header">
+        <div class="kicker">Anchor feature</div>
+        <h2>Recent communication is the heart of the product.</h2>
+        <p>
+          This is the clearest wedge. The communication feed becomes the daily operating layer between case managers,
+          outside placements, tutors, and related service providers.
+        </p>
+      </div>
+
+      <div class="comm-shell">
+        <div class="thread-list">
+          <h3>Recent communication</h3>
+          <p class="head-sub">Student-linked threads replace inbox sprawl.</p>
+
+          <div class="filters">
+            <div class="chip">All</div>
+            <div class="chip">Unread</div>
+            <div class="chip">Awaiting response</div>
+            <div class="chip">Attachments</div>
+          </div>
+
+          <button class="thread-btn active" data-thread="0">
+            <div class="top">
+              <div class="t-title">Need weekly behavior summary by Friday</div>
+              <div class="badge warn">Awaiting response</div>
+            </div>
+            <div class="t-meta">Student A. · Riverbend Collaborative</div>
+            <div class="t-body">Yes — uploading the summary now. I will include the transition notes in the same packet.</div>
+          </button>
+
+          <button class="thread-btn" data-thread="1">
+            <div class="top">
+              <div class="t-title">Tutor update: math fluency improving</div>
+              <div class="badge soft">Open</div>
+            </div>
+            <div class="t-meta">Student C. · Lighthouse Tutoring</div>
+            <div class="t-body">Weekly tutoring update posted. Student is showing stronger math fluency and better stamina...</div>
+          </button>
+
+          <button class="thread-btn" data-thread="2">
+            <div class="top">
+              <div class="t-title">Will quarterly progress report be ready by Friday?</div>
+              <div class="badge warn">Urgent</div>
+            </div>
+            <div class="t-meta">Student B. · Maple Path Academy</div>
+            <div class="t-body">Please confirm whether the quarterly progress report will be ready by Friday.</div>
+          </button>
+
+          <button class="thread-btn" data-thread="3">
+            <div class="top">
+              <div class="t-title">Counseling session summary added</div>
+              <div class="badge success">Resolved</div>
+            </div>
+            <div class="t-meta">Student A. · Thrive Related Services</div>
+            <div class="t-body">Counseling session log has been added for this week. No major concerns beyond transition anxiety...</div>
+          </button>
+        </div>
+
+        <div class="thread-detail">
+          <h3>Thread detail</h3>
+          <p class="head-sub">Open the conversation, view attachments, and turn it into a tracked next step.</p>
+
+          <div class="detail-header">
+            <div class="detail-title" id="detail-title">Need weekly behavior summary by Friday</div>
+            <div class="row" style="margin-bottom:10px;">
+              <div class="badge warn" id="detail-status">Awaiting response</div>
+              <div class="badge soft" id="detail-type">Document Request</div>
+            </div>
+            <div class="detail-meta" id="detail-meta">
+              Student A. · Case Manager to Riverbend Collaborative
+            </div>
+          </div>
+
+          <div class="messages" id="messages"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="pricing">
+    <div class="container">
+      <div class="section-header">
+        <div class="kicker">Pricing hypothesis</div>
+        <h2>District SaaS, not individual teacher subscriptions.</h2>
+        <p>
+          PlacementBridge is designed to be sold to district leadership with pilot-first pricing and a clean expansion path.
+        </p>
+      </div>
+
+      <div class="pricing">
+        <div class="price-card">
+          <div class="tier">Pilot</div>
+          <div class="amount">$6k–$9k</div>
+          <p>Annual pricing for a limited pilot with a small number of active student workspaces and outside partners.</p>
+          <ul>
+            <li>Up to 25 active student workspaces</li>
+            <li>2 external partner organizations</li>
+            <li>District onboarding included</li>
+            <li>Prove value before expanding</li>
+          </ul>
+        </div>
+
+        <div class="price-card featured">
+          <div class="tier">Core district</div>
+          <div class="amount">$18k–$30k</div>
+          <p>Best fit for special education departments that coordinate frequent reporting, tutoring, or placement handoffs.</p>
+          <ul>
+            <li>Up to 150 active workspaces</li>
+            <li>Unlimited district users</li>
+            <li>Audit logs and permissions</li>
+            <li>Tasks, messaging, document workflows</li>
+          </ul>
+        </div>
+
+        <div class="price-card">
+          <div class="tier">Collaborative / multi-school</div>
+          <div class="amount">$35k+</div>
+          <p>For larger implementations needing shared governance, stronger reporting, and structured rollout support.</p>
+          <ul>
+            <li>Higher volume workflows</li>
+            <li>Custom implementation support</li>
+            <li>Multiple programs or schools</li>
+            <li>Expanded admin controls</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container cta" id="pilot">
+    <div class="cta-grid">
+      <div>
+        <h2>The secure coordination layer between districts and outside providers.</h2>
+        <p>
+          Start with one program, a few students, and the outside partners that create the most communication friction.
+          Prove the workflow before expanding districtwide.
+        </p>
+      </div>
+      <div class="cta-box">
+        <h3>Request a pilot</h3>
+        <p>
+          This is a static public demo page. The full app version includes workspaces, live threads, tasks, documents,
+          and access control.
+        </p>
+        <a class="btn btn-primary" href="mailto:patrick@example.com?subject=PlacementBridge%20Pilot%20Inquiry">Contact for demo</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer container">
+    PlacementBridge demo site · Built as a public product preview
+  </div>
+
+  <script>
+    const threadData = [
+      {
+        title: "Need weekly behavior summary by Friday",
+        status: "Awaiting response",
+        statusClass: "warn",
+        type: "Document Request",
+        meta: "Student A. · Case Manager to Riverbend Collaborative",
+        messages: [
+          {
+            dark: true,
+            name: "Jenn Sarno",
+            role: "Case Manager",
+            time: "Today · 8:46 AM",
+            body: "Can you upload this week’s behavior summary and transition notes by Friday afternoon?",
+            attachment: ""
+          },
+          {
+            dark: false,
+            name: "Alyssa Kent",
+            role: "Placement Coordinator",
+            time: "Today · 9:12 AM",
+            body: "Yes — uploading the summary now. I will include the transition notes in the same packet.",
+            attachment: "Q3 Progress Report.pdf"
+          }
+        ]
+      },
+      {
+        title: "Tutor update: math fluency improving",
+        status: "Open",
+        statusClass: "soft",
+        type: "General Update",
+        meta: "Student C. · Lighthouse Tutoring to district team",
+        messages: [
+          {
+            dark: false,
+            name: "Noah Patel",
+            role: "Tutor",
+            time: "Yesterday · 4:18 PM",
+            body: "Weekly tutoring update posted. Student is showing stronger math fluency and better stamina with multi-step problems.",
+            attachment: ""
+          }
+        ]
+      },
+      {
+        title: "Will quarterly progress report be ready by Friday?",
+        status: "Urgent",
+        statusClass: "warn",
+        type: "Question / Follow-up",
+        meta: "Student B. · District follow-up to Maple Path Academy",
+        messages: [
+          {
+            dark: true,
+            name: "Patrick Dineen",
+            role: "District Admin",
+            time: "Today · 8:31 AM",
+            body: "Please confirm whether the quarterly progress report will be ready by Friday. We need it before the district review call.",
+            attachment: ""
+          }
+        ]
+      },
+      {
+        title: "Counseling session summary added",
+        status: "Resolved",
+        statusClass: "success",
+        type: "General Update",
+        meta: "Student A. · Thrive Related Services",
+        messages: [
+          {
+            dark: false,
+            name: "Rosa Chen",
+            role: "Service Provider",
+            time: "Mar 7 · 1:05 PM",
+            body: "Counseling session log has been added for this week. No major concerns beyond transition anxiety during afternoon blocks.",
+            attachment: "Counseling Session Log.pdf"
+          }
+        ]
+      }
+    ];
+
+    const messagesEl = document.getElementById("messages");
+    const detailTitle = document.getElementById("detail-title");
+    const detailStatus = document.getElementById("detail-status");
+    const detailType = document.getElementById("detail-type");
+    const detailMeta = document.getElementById("detail-meta");
+    const threadButtons = document.querySelectorAll(".thread-btn");
+
+    function renderThread(index) {
+      const thread = threadData[index];
+      detailTitle.textContent = thread.title;
+      detailStatus.textContent = thread.status;
+      detailStatus.className = "badge " + thread.statusClass;
+      detailType.textContent = thread.type;
+      detailMeta.textContent = thread.meta;
+
+      messagesEl.innerHTML = thread.messages.map(msg => `
+        <div class="msg ${msg.dark ? 'dark' : ''}">
+          <div class="msg-top">
+            <div class="name">${msg.name}</div>
+            <div class="role">${msg.role}</div>
+            <div class="time">${msg.time}</div>
+          </div>
+          <p>${msg.body}</p>
+          ${msg.attachment ? `<div class="attachment">📎 ${msg.attachment}</div>` : ""}
+        </div>
+      `).join("");
+    }
+
+    threadButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        threadButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderThread(btn.dataset.thread);
+      });
+    });
+
+    renderThread(0);
+  </script>
+</body>
+</html>
